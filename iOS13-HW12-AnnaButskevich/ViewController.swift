@@ -6,14 +6,30 @@
 //
 
 import UIKit
+import SnapKit
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
+
+    // MARK: - UI
+
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        setupHierarchy()
+        setupLayout()
     }
 
+    // MARK: - Setup
 
+    private func setupHierarchy() {
+        [].forEach {view.addSubview($0)}
+    }
+
+    private func setupLayout() {
+        
+    }
+
+    // MARK: - Action
 }
 
