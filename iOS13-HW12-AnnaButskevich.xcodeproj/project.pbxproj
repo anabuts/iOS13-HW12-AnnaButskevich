@@ -77,7 +77,6 @@
 				C51925312C21C49800329468 /* SceneDelegate.swift */,
 				C51925432C21CC9500329468 /* Storyboard */,
 				C51925492C21CEBC00329468 /* App */,
-				C51925332C21C49800329468 /* ViewController.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -102,6 +101,7 @@
 		C51925492C21CEBC00329468 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				C51925332C21C49800329468 /* ViewController.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
