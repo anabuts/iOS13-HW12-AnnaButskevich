@@ -53,6 +53,17 @@ final class ViewController: UIViewController, CAAnimationDelegate {
         return button
     }()
 
+    private lazy var stackView: UIStackView = {
+        let stack = UIStackView()
+        stack.addArrangedSubview(timerLabel)
+        stack.addArrangedSubview(startPauseButton)
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.spacing = 20
+        stack.distribution = .fillProportionally
+        return stack
+    }()
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -65,7 +76,7 @@ final class ViewController: UIViewController, CAAnimationDelegate {
     // MARK: - Setup
 
     private func setupHierarchy() {
-        [stateLabel, timerLabel, startPauseButton].forEach {view.addSubview($0)}
+        [stateLabel, stackView].forEach {view.addSubview($0)}
     }
 
     private func setupLayout() {
@@ -75,14 +86,9 @@ final class ViewController: UIViewController, CAAnimationDelegate {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
         }
 
-        timerLabel.snp.makeConstraints {make in
-            make.centerX.equalTo(view)
+        stackView.snp.makeConstraints {make in
             make.centerY.equalTo(view)
-        }
-
-        startPauseButton.snp.makeConstraints {make in
-            make.top.equalTo(timerLabel.snp.bottom).offset(20)
-            make.centerX.equalToSuperview()
+            make.centerX.equalTo(view)
         }
     }
 
@@ -135,7 +141,7 @@ final class ViewController: UIViewController, CAAnimationDelegate {
         return String(format: "%02i:%02i", minutes, seconds)
     }
 
-    func drawsShapeLayer() {
+    private func drawsShapeLayer() {
         shapeLayer.path = UIBezierPath(
             arcCenter: CGPoint(x: view.frame.midX, y: view.frame.midY),
             radius: 150,
@@ -144,11 +150,11 @@ final class ViewController: UIViewController, CAAnimationDelegate {
             clockwise: true).cgPath
         shapeLayer.strokeColor = UIColor.gray.cgColor
         shapeLayer.fillColor = UIColor.clear.cgColor
-        shapeLayer.lineWidth = 10
+        shapeLayer.lineWidth = 14
         view.layer.addSublayer(shapeLayer)
     }
 
-    func drawsTrackLayer() {
+    private func drawsTrackLayer() {
         trackLayer.path = UIBezierPath(
             arcCenter: CGPoint(x: view.frame.midX, y: view.frame.midY),
             radius: 150,
@@ -158,15 +164,16 @@ final class ViewController: UIViewController, CAAnimationDelegate {
         ).cgPath
         trackLayer.strokeColor = UIColor.white.cgColor
         trackLayer.fillColor = UIColor.clear.cgColor
-        trackLayer.lineWidth = 8
+        trackLayer.lineCap = CAShapeLayerLineCap.round
+        trackLayer.lineWidth = 10
         view.layer.addSublayer(trackLayer)
     }
 
-    func startResumeAnimation() {
+    private func startResumeAnimation() {
         !isAnimationStarted ? startAnimation() : resumeAnimation()
     }
 
-    func startAnimation() {
+    private func startAnimation() {
         let animation = CABasicAnimation(keyPath: "strokeEnd")
         trackLayer.strokeEnd = 0.0
         animation.keyPath = "strokeEnd"
@@ -180,13 +187,13 @@ final class ViewController: UIViewController, CAAnimationDelegate {
         isAnimationStarted = true
     }
 
-    func pauseAnimation() {
+    private func pauseAnimation() {
         let pause = trackLayer.convertTime(CACurrentMediaTime(), from: nil)
         trackLayer.speed = 0.0
         trackLayer.timeOffset = pause
     }
 
-    func resumeAnimation() {
+    private func resumeAnimation() {
         let pause = trackLayer.timeOffset
         trackLayer.speed = 1.0
         trackLayer.timeOffset = 0.0
@@ -195,7 +202,7 @@ final class ViewController: UIViewController, CAAnimationDelegate {
         trackLayer.beginTime = timeSincePaused
     }
 
-    func stopAnimation() {
+    private func stopAnimation() {
         trackLayer.removeAnimation(forKey: "strokeEnd")
         isAnimationStarted = false
     }
