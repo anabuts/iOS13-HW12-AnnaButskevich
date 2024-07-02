@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class ViewController: UIViewController {
+final class ViewController: UIViewController, CAAnimationDelegate {
 
     // MARK: - UI
 
@@ -18,6 +18,11 @@ final class ViewController: UIViewController {
     var count = 10
     let workTime = 10
     let restTime = 5
+
+    var isAnimationStarted = false
+
+    let shapeLayer = CAShapeLayer()
+    let trackLayer = CAShapeLayer()
 
     private lazy var stateLabel: UILabel = {
         let label = UILabel()
@@ -52,6 +57,7 @@ final class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        drawsShapeLayer()
         setupHierarchy()
         setupLayout()
     }
@@ -89,10 +95,18 @@ final class ViewController: UIViewController {
 
     @objc private func buttonPressed() {
         if !isStarted {
+            drawsTrackLayer()
+            startResumeAnimation()
             isStarted = true
             startPauseButton.setImage(addImage("pause.fill"), for: .normal)
-            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(timerCounter), userInfo: nil, repeats: true)
+            timer = Timer.scheduledTimer(
+                timeInterval: 1.0,
+                target: self,
+                selector: #selector(timerCounter),
+                userInfo: nil,
+                repeats: true)
         } else {
+            pauseAnimation()
             timer.invalidate()
             isStarted = false
             startPauseButton.setImage(addImage("play.fill"), for: .normal)
@@ -107,6 +121,7 @@ final class ViewController: UIViewController {
             timer.invalidate()
             stateLabel.text = isWorkTime ? "Rest" : "Work"
             startPauseButton.setImage(addImage("play.fill"), for: .normal)
+            stopAnimation()
             isWorkTime = !isWorkTime
             count = isWorkTime ? workTime : restTime
             isStarted = false
@@ -120,5 +135,72 @@ final class ViewController: UIViewController {
         return String(format: "%02i:%02i", minutes, seconds)
     }
 
-}
+    func drawsShapeLayer() {
+        shapeLayer.path = UIBezierPath(
+            arcCenter: CGPoint(x: view.frame.midX, y: view.frame.midY),
+            radius: 150,
+            startAngle: -90.degreesToRadians,
+            endAngle: 270.degreesToRadians,
+            clockwise: true).cgPath
+        shapeLayer.strokeColor = UIColor.gray.cgColor
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        shapeLayer.lineWidth = 10
+        view.layer.addSublayer(shapeLayer)
+    }
 
+    func drawsTrackLayer() {
+        trackLayer.path = UIBezierPath(
+            arcCenter: CGPoint(x: view.frame.midX, y: view.frame.midY),
+            radius: 150,
+            startAngle: -90.degreesToRadians,
+            endAngle: 270.degreesToRadians,
+            clockwise: true
+        ).cgPath
+        trackLayer.strokeColor = UIColor.white.cgColor
+        trackLayer.fillColor = UIColor.clear.cgColor
+        trackLayer.lineWidth = 8
+        view.layer.addSublayer(trackLayer)
+    }
+
+    func startResumeAnimation() {
+        !isAnimationStarted ? startAnimation() : resumeAnimation()
+    }
+
+    func startAnimation() {
+        let animation = CABasicAnimation(keyPath: "strokeEnd")
+        trackLayer.strokeEnd = 0.0
+        animation.keyPath = "strokeEnd"
+        animation.fromValue = 0
+        animation.toValue = 1
+        animation.duration = Double(count)
+        animation.isRemovedOnCompletion = false
+        animation.isAdditive = true
+        animation.fillMode = .forwards
+        trackLayer.add(animation, forKey: "strokeEnd")
+        isAnimationStarted = true
+    }
+
+    func pauseAnimation() {
+        let pause = trackLayer.convertTime(CACurrentMediaTime(), from: nil)
+        trackLayer.speed = 0.0
+        trackLayer.timeOffset = pause
+    }
+
+    func resumeAnimation() {
+        let pause = trackLayer.timeOffset
+        trackLayer.speed = 1.0
+        trackLayer.timeOffset = 0.0
+        trackLayer.beginTime = 0.0
+        let timeSincePaused = trackLayer.convertTime(CACurrentMediaTime(), from: nil) - pause
+        trackLayer.beginTime = timeSincePaused
+    }
+
+    func stopAnimation() {
+        trackLayer.removeAnimation(forKey: "strokeEnd")
+        isAnimationStarted = false
+    }
+
+    func animationDidStop(_ animation: CAAnimation, finished flag: Bool) {
+        stopAnimation()
+    }
+}
