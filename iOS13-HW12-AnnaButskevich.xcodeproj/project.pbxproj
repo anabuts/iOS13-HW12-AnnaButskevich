@@ -13,6 +13,7 @@
 		C51925392C21C49900329468 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C51925382C21C49900329468 /* Assets.xcassets */; };
 		C519253C2C21C49900329468 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = C519253B2C21C49900329468 /* Base */; };
 		C55653562C2203B500E6DC6C /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = C55653552C2203B500E6DC6C /* SnapKit */; };
+		C5B4986B2C34417B00D034B4 /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B4986A2C34417B00D034B4 /* Int+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,7 @@
 		C51925382C21C49900329468 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C519253B2C21C49900329468 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C519253D2C21C49900329468 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C5B4986A2C34417B00D034B4 /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 		C519252E2C21C49800329468 /* iOS13-HW12-AnnaButskevich */ = {
 			isa = PBXGroup;
 			children = (
+				C5B498682C34413500D034B4 /* Extensions */,
 				C51925452C21CDE700329468 /* Resources */,
 				C51925442C21CD4C00329468 /* Sources */,
 			);
@@ -104,6 +107,22 @@
 				C51925332C21C49800329468 /* ViewController.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		C5B498682C34413500D034B4 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C5B498692C34414E00D034B4 /* Int+Extensions */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		C5B498692C34414E00D034B4 /* Int+Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C5B4986A2C34417B00D034B4 /* Int+Extensions.swift */,
+			);
+			path = "Int+Extensions";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,6 +202,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C51925342C21C49800329468 /* ViewController.swift in Sources */,
+				C5B4986B2C34417B00D034B4 /* Int+Extensions.swift in Sources */,
 				C51925302C21C49800329468 /* AppDelegate.swift in Sources */,
 				C51925322C21C49800329468 /* SceneDelegate.swift in Sources */,
 			);
